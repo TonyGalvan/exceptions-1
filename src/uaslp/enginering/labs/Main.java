@@ -2,15 +2,16 @@ package uaslp.enginering.labs;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ItemColiisionException{
         try {
             otro();
         } catch (PhantomCollisionException e) {
             System.out.println("B1");
         }
+
     }
 
-    public static void otro() throws PhantomCollisionException {
+    public static void otro() throws PhantomCollisionException, ItemColiisionException {
         try {
             System.out.println("A0");
             move(1);
@@ -18,7 +19,12 @@ public class Main {
         }  catch (WallCollisionException e) {
             System.out.println("A3");
             e.printStackTrace();
-        } finally {
+        } catch (ItemColiisionException e){
+            System.out.println("A6");
+            e.printStackTrace();
+            throw new ItemColiisionException();
+        }
+        finally {
             System.out.println("A5");
         }
 
@@ -33,7 +39,7 @@ public class Main {
 
     }
 
-    public static void move(int delta) throws PhantomCollisionException, WallCollisionException {
+    public static void move(int delta) throws PhantomCollisionException, WallCollisionException, ItemColiisionException {
         setPosition(getX() + 1, getY());
 
         if (hasCollisions(Phantom.class) || delta == 1) {
@@ -42,6 +48,9 @@ public class Main {
 
         if (hasCollisions(Wall.class) || delta == 2) {
             throw new WallCollisionException();
+        }
+        if (hasCollisions(Item.class) || delta == 3) {
+            throw new ItemColiisionException();
         }
 
     }
